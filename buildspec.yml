@@ -5,26 +5,14 @@ phases:
     runtime-versions:
       python: 3.12
     commands:
-      - echo Installing Terraform...
-      - curl -o terraform.zip https://releases.hashicorp.com/terraform/1.8.4/terraform_1.8.4_linux_amd64.zip
-      - unzip terraform.zip
-      - mv terraform /usr/local/bin/
-      - terraform -version
-
-  pre_build:
-    commands:
-      - echo Zipping Lambda functions...
+      - echo "Installing dependencies..."
       - cd lambdas/signup
       - pip install -r requirements.txt -t .
-      - zip -r ../../infra/modules/lambdas/signup.zip .
-      - cd ../../infra
-
   build:
     commands:
-      - echo Running Terraform...
-      - terraform init
-      - terraform apply -auto-approve
-
+      - echo "Zipping Lambda code..."
+      - zip -r signup.zip .
+      - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
 artifacts:
   files:
-    - infra/modules/signup.zip
+    - lambdas/signup/signup.zip

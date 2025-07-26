@@ -1,0 +1,16 @@
+module "cognito" {
+  source = "./modules/cognito"
+}
+
+module "api_gateway" {
+  source            = "./modules/api_gateway"
+  signup_lambda_arn = module.lambdas.signup_arn
+}
+
+module "lambdas" {
+  source                    = "./modules/lambdas"
+  env                       = "dev"
+  cognito_user_pool_id      = module.cognito.user_pool_id
+  cognito_app_client_id     = module.cognito.app_client_id
+  api_gateway_execution_arn = module.api_gateway.execution_arn
+}

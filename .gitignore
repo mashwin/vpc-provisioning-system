@@ -1,0 +1,25 @@
+# Ignore Terraform state
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Lambda build artifacts
+**/venv/
+**/__pycache__/
+**/*.zip
+**/.python-version
+**/.env
+**/dist/
+**/build/
+**/.DS_Store
+
+# Python bytecode
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# OS files
+Thumbs.db
+.DS_Store

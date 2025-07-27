@@ -20,6 +20,11 @@ phases:
       - pip install -r requirements.txt -t .
       - cd ../..
 
+      - echo "Installing dependencies for createvpc lambda..."
+      - cd lambdas/createvpc
+      - pip install -r requirements.txt -t .
+      - cd ../..
+
   build:
     commands:
       - echo "Zipping signup lambda..."
@@ -37,6 +42,11 @@ phases:
       - zip -r ../../confirm.zip .
       - cd ../..
 
+      - echo "Zipping createvpc lambda..."
+      - cd lambdas/createvpc
+      - zip -r ../../createvpc.zip .
+      - cd ../..
+
       - echo "Uploading signup.zip to S3..."
       - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
 
@@ -46,9 +56,13 @@ phases:
       - echo "Uploading confirm.zip to S3..."
       - aws s3 cp confirm.zip s3://vpc-provisioning-bucket/lambdas/confirm.zip
 
+      - echo "Uploading createvpc.zip to S3..."
+      - aws s3 cp createvpc.zip s3://vpc-provisioning-bucket/lambdas/createvpc.zip
+
 artifacts:
   files:
     - signup.zip
     - login.zip
     - confirm.zip
+    - createvpc.zip
   discard-paths: yes

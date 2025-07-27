@@ -22,6 +22,7 @@ phases:
 
       - echo "Uploading signup.zip to S3..."
       - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
+      - aws lambda update-function-code --function-name vpc-provisioning-signup-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/signup.zip
 
       - echo "Zipping login Lambda..."
       - cd lambdas/login
@@ -30,6 +31,7 @@ phases:
 
       - echo "Uploading login.zip to S3..."
       - aws s3 cp login.zip s3://vpc-provisioning-bucket/lambdas/login.zip
+      - aws lambda update-function-code --function-name vpc-provisioning-login-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/login.zip
 
 artifacts:
   files:

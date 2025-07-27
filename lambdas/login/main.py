@@ -3,6 +3,7 @@ import os
 import json
 
 client = boto3.client("cognito-idp")
+CLIENT_ID = os.environ.get("COGNITO_CLIENT_ID")
 
 def lambda_handler(event, context):
     try:
@@ -14,7 +15,7 @@ def lambda_handler(event, context):
         if not username or not password:
             return {
                 "statusCode": 400,
-                "body": json.dumps({"message": "Username and password are require"})
+                "body": json.dumps({"message": "Username and password are required"})
             }
 
         response = client.initiate_auth(
@@ -23,7 +24,7 @@ def lambda_handler(event, context):
                 "USERNAME": username,
                 "PASSWORD": password
             },
-            ClientId=os.environ["COGNITO_CLIENT_ID"]
+            ClientId=CLIENT_ID
         )
 
         return {

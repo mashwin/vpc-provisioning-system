@@ -5,56 +5,33 @@ phases:
     runtime-versions:
       python: 3.12
     commands:
-      - echo "Installing dependencies for Signup Lambda..."
-      - cd lambdas/signup
-      - pip install -r requirements.txt -t .
-      - cd ../..
-
-      - echo "Installing dependencies for Login Lambda..."
-      - cd lambdas/login
-      - pip install -r requirements.txt -t .
-      - cd ../..
-
-      - echo "Installing dependencies for Confirm Lambda..."
-      - cd lambdas/confirm
-      - pip install -r requirements.txt -t .
-      - cd ../..
-
-      - echo "Installing dependencies for Createvpc Lambda..."
-      - cd lambdas/createvpc
-      - pip install -r requirements.txt -t .
-      - cd ../..
+      - echo "Installing dependencies for all Lambdas..."
+      - for dir in signup login confirm createvpc; do cd lambdas/$dir && pip install -r requirements.txt -t . && cd ../..; done
 
 build:
   commands:
-    - echo "Zipping and uploading Signup Lambda..."
+    - echo "Zipping and uploading all Lambdas..."
+
     - cd lambdas/signup
-    - zip -r signup.zip .
-    - aws s3 rm s3://vpc-provisioning-bucket/lambdas/signup.zip || true
+    - zip -r ../../signup.zip .
+    - cd ../..
     - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
     - aws lambda update-function-code --function-name vpc-provisioning-signup-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/signup.zip
-    - cd ../..
 
-    - echo "Zipping and uploading Login Lambda..."
     - cd lambdas/login
-    - zip -r login.zip .
-    - aws s3 rm s3://vpc-provisioning-bucket/lambdas/login.zip || true
+    - zip -r ../../login.zip .
+    - cd ../..
     - aws s3 cp login.zip s3://vpc-provisioning-bucket/lambdas/login.zip
     - aws lambda update-function-code --function-name vpc-provisioning-login-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/login.zip
-    - cd ../..
 
-    - echo "Zipping and uploading Confirm Lambda..."
     - cd lambdas/confirm
-    - zip -r confirm.zip .
-    - aws s3 rm s3://vpc-provisioning-bucket/lambdas/confirm.zip || true
+    - zip -r ../../confirm.zip .
+    - cd ../..
     - aws s3 cp confirm.zip s3://vpc-provisioning-bucket/lambdas/confirm.zip
     - aws lambda update-function-code --function-name vpc-provisioning-confirm-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/confirm.zip
-    - cd ../..
 
-    - echo "Zipping and uploading Createvpc Lambda..."
     - cd lambdas/createvpc
-    - zip -r createvpc.zip .
-    - aws s3 rm s3://vpc-provisioning-bucket/lambdas/createvpc.zip || true
+    - zip -r ../../createvpc.zip .
+    - cd ../..
     - aws s3 cp createvpc.zip s3://vpc-provisioning-bucket/lambdas/createvpc.zip
     - aws lambda update-function-code --function-name vpc-provisioning-createvpc-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/createvpc.zip
-    - cd ../..

@@ -59,4 +59,4 @@ artifacts:
     - lambdas/signup/signup.zip
     - lambdas/login/login.zip
     - lambdas/confirm/confirm.zip
-    - lambdas/confirm/createvpc.zip
+    - lambdas/createvpc/createvpc.zip

@@ -19,6 +19,11 @@ variable "login_lambda_arn" {
   type        = string
 }
 
+variable "confirm_lambda_arn" {
+  description = "ARN of the confirm lambda function"
+  type        = string
+}
+
 variable "region" {
   description = "default region"
   default     = "us-east-1"

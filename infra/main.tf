@@ -3,9 +3,10 @@ module "cognito" {
 }
 
 module "api_gateway" {
-  source            = "./modules/api_gateway"
-  signup_lambda_arn = module.lambdas.signup_arn
-  login_lambda_arn  = module.lambdas.login_arn
+  source             = "./modules/api_gateway"
+  signup_lambda_arn  = module.lambdas.signup_arn
+  login_lambda_arn   = module.lambdas.login_arn
+  confirm_lambda_arn = module.lambdas.confirm_arn
 }
 
 module "lambdas" {

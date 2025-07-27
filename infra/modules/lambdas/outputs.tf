@@ -5,3 +5,7 @@ output "signup_arn" {
 output "login_arn" {
   value = aws_lambda_function.login.arn
 }
+
+output "confirm_arn" {
+  value = aws_lambda_function.confirm.arn
+}

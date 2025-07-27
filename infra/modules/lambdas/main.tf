@@ -38,7 +38,7 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Allow API Gateway to invoke this Lambda
+# resource policy for signup lambda
 resource "aws_lambda_permission" "api_gateway" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
@@ -65,12 +65,39 @@ resource "aws_lambda_function" "login" {
   }
 }
 
-# Lambda permission for login
+# resource policy for login
 resource "aws_lambda_permission" "api_gateway_login" {
   statement_id  = "AllowAPIGatewayInvokeLogin"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.login.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${var.api_gateway_execution_arn}/*/POST/login"
+}
+
+# Confirm lambda
+resource "aws_lambda_function" "confirm" {
+  function_name = "vpc-provisioning-confirm-${var.env}"
+  handler       = "main.lambda_handler"
+  runtime       = "python3.12"
+  s3_bucket     = "vpc-provisioning-bucket"
+  s3_key        = "lambdas/confirm.zip"
+  role          = aws_iam_role.lambda_exec.arn
+  memory_size   = 128
+  timeout       = 300
+  environment {
+    variables = {
+      COGNITO_USER_POOL_ID = var.cognito_user_pool_id
+      COGNITO_CLIENT_ID    = var.cognito_app_client_id
+    }
+  }
+}
+
+# resource policy for confirm
+resource "aws_lambda_permission" "api_gateway_confirm" {
+  statement_id  = "AllowAPIGatewayInvokeLogin"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.confirm.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${var.api_gateway_execution_arn}/*/POST/confirm"
 }
 

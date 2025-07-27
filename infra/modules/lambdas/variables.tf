@@ -13,7 +13,6 @@ variable "cognito_app_client_id" {
   type        = string
 }
 
-
 variable "api_gateway_execution_arn" {
   description = "Execution ARN of the API Gateway"
   type        = string

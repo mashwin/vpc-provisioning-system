@@ -20,6 +20,11 @@ phases:
       - pip install -r requirements.txt -t .
       - cd ../..
 
+      - echo "Installing dependencies for Createvpc Lambda..."
+      - cd lambdas/createvpc
+      - pip install -r requirements.txt -t .
+      - cd ../..
+
 build:
   commands:
     - echo "Zipping and uploading Signup Lambda..."

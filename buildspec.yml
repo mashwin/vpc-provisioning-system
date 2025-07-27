@@ -15,6 +15,11 @@ phases:
       - pip install -r requirements.txt -t .
       - cd ../..
 
+      - echo "Installing dependencies for Confirm Lambda..."
+      - cd lambdas/confirm
+      - pip install -r requirements.txt -t .
+      - cd ../..
+
   build:
     commands:
       - echo "Zipping and uploading Signup Lambda..."
@@ -29,7 +34,14 @@ phases:
       - aws s3 cp login.zip s3://vpc-provisioning-bucket/lambdas/login.zip
       - cd ../..
 
+      - echo "Zipping and uploading Confirm Lambda..."
+      - cd lambdas/confirm
+      - zip -r confirm.zip .
+      - aws s3 cp confirm.zip s3://vpc-provisioning-bucket/lambdas/confirm.zip
+      - cd ../.
+
 artifacts:
   files:
     - lambdas/signup/signup.zip
     - lambdas/login/login.zip
+    - lambdas/login/confirm.zip

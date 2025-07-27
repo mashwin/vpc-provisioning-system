@@ -14,6 +14,11 @@ variable "signup_lambda_arn" {
   type        = string
 }
 
+variable "login_lambda_arn" {
+  description = "ARN of the login lambda function"
+  type        = string
+}
+
 variable "region" {
   description = "default region"
   default     = "us-east-1"

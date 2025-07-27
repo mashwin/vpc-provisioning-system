@@ -25,7 +25,6 @@ build:
     - echo "Zipping and uploading Signup Lambda..."
     - cd lambdas/signup
     - zip -r signup.zip .
-    - aws s3 rm s3://vpc-provisioning-bucket/lambdas/signup.zip || true
     - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
     - aws lambda update-function-code --function-name vpc-provisioning-signup-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/signup.zip
     - cd ../..
@@ -33,7 +32,6 @@ build:
     - echo "Zipping and uploading Login Lambda..."
     - cd lambdas/login
     - zip -r login.zip .
-    - aws s3 rm s3://vpc-provisioning-bucket/lambdas/login.zip || true
     - aws s3 cp login.zip s3://vpc-provisioning-bucket/lambdas/login.zip
     - aws lambda update-function-code --function-name vpc-provisioning-login-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/login.zip
     - cd ../..
@@ -41,7 +39,6 @@ build:
     - echo "Zipping and uploading Confirm Lambda..."
     - cd lambdas/confirm
     - zip -r confirm.zip .
-    - aws s3 rm s3://vpc-provisioning-bucket/lambdas/confirm.zip || true
     - aws s3 cp confirm.zip s3://vpc-provisioning-bucket/lambdas/confirm.zip
     - aws lambda update-function-code --function-name vpc-provisioning-confirm-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/confirm.zip
     - cd ../..

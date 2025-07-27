@@ -12,15 +12,16 @@ phases:
 
 build:
   commands:
-    - echo "Zipping and uploading Signup Lambda..."
+    - echo "Zipping Signup Lambda..."
     - cd lambdas/signup
-    - zip -r signup.zip .
-    - ls -lh signup.zip || exit 1
-    - aws s3 rm s3://vpc-provisioning-bucket/lambdas/signup.zip || true
-    - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip || exit 1
-    - aws lambda update-function-code --function-name vpc-provisioning-signup-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/signup.zip
+    - zip -r ../../signup.zip . # Output zip in root directory for consistency
     - cd ../..
+    - echo "Uploading to S3..."
+    - aws s3 rm s3://vpc-provisioning-bucket/lambdas/signup.zip || true
+    - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
+    - echo "Updating Lambda..."
+    - aws lambda update-function-code --function-name vpc-provisioning-signup-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/signup.zip
 
 artifacts:
   files:
-    - lambdas/signup/signup.zip
+    - signup.zip

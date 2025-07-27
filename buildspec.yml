@@ -5,20 +5,20 @@ phases:
     runtime-versions:
       python: 3.12
     commands:
-      - pip install -r lambdas/signup/requirements.txt -t lambdas/signup/
-      - pip install -r lambdas/login/requirements.txt -t lambdas/login/
+      - echo "Installing dependencies..."
+      - cd lambdas/signup
+      - pip install -r requirements.txt -t .
+      - cd ../..
+
   build:
     commands:
-      - cd lambdas/signup && zip -r ../../signup.zip . && cd ../..
-      - cd lambdas/login && zip -r ../../login.zip . && cd ../..
+      - echo "Zipping Lambda code..."
+      - cd lambdas/signup
+      - zip -r ../../signup.zip .
+      - cd ../..
+      - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
+
 artifacts:
   files:
     - signup.zip
-    - login.zip
   discard-paths: yes
-
-# Optional: post_build to upload manually to S3 (if not using CodePipeline artifacts)
-post_build:
-  commands:
-    - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
-    - aws s3 cp login.zip s3://vpc-provisioning-bucket/lambdas/login.zip

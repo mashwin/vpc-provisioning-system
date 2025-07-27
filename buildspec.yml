@@ -46,8 +46,17 @@ build:
     - aws lambda update-function-code --function-name vpc-provisioning-confirm-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/confirm.zip
     - cd ../..
 
+    - echo "Zipping and uploading Createvpc Lambda..."
+    - cd lambdas/createvpc
+    - zip -r createvpc.zip .
+    - aws s3 rm s3://vpc-provisioning-bucket/lambdas/createvpc.zip || true
+    - aws s3 cp confirm.zip s3://vpc-provisioning-bucket/lambdas/createvpc.zip
+    - aws lambda update-function-code --function-name vpc-provisioning-createvpc-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/createvpc.zip
+    - cd ../..
+
 artifacts:
   files:
     - lambdas/signup/signup.zip
     - lambdas/login/login.zip
     - lambdas/confirm/confirm.zip
+    - lambdas/confirm/createvpc.zip

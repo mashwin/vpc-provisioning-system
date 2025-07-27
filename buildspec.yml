@@ -10,12 +10,13 @@ phases:
       - pip install -r requirements.txt -t .
       - cd ../..
 
-build:
+post_build:
   commands:
     - echo "Zipping Signup Lambda..."
     - cd lambdas/signup
-    - zip -r ../../signup.zip . # Output zip in root directory for consistency
+    - zip -r ../../signup.zip .
     - cd ../..
+    - ls -la # Confirm the zip is present in root
     - echo "Uploading to S3..."
     - aws s3 rm s3://vpc-provisioning-bucket/lambdas/signup.zip || true
     - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip

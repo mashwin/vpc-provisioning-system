@@ -14,7 +14,7 @@ def lambda_handler(event, context):
         if not username or not password:
             return {
                 "statusCode": 400,
-                "body": json.dumps({"message": "Username and password are required"})
+                "body": json.dumps({"message": "Username and password are require"})
             }
 
         response = client.initiate_auth(

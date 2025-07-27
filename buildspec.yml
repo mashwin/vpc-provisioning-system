@@ -17,7 +17,6 @@ artifacts:
     - login.zip
   discard-paths: yes
 
-# Optional: post_build to upload manually to S3 (if not using CodePipeline artifacts)
 post_build:
   commands:
     - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip

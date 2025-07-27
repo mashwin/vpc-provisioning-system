@@ -5,19 +5,31 @@ phases:
     runtime-versions:
       python: 3.12
     commands:
-      - pip install -r lambdas/signup/requirements.txt -t lambdas/signup/
-      - pip install -r lambdas/login/requirements.txt -t lambdas/login/
+      - echo "Installing dependencies for Signup Lambda..."
+      - cd lambdas/signup
+      - pip install -r requirements.txt -t .
+      - cd ../..
+
+      - echo "Installing dependencies for Login Lambda..."
+      - cd lambdas/login
+      - pip install -r requirements.txt -t .
+      - cd ../..
+
   build:
     commands:
-      - cd lambdas/signup && zip -r ../../signup.zip . && cd ../..
-      - cd lambdas/login && zip -r ../../login.zip . && cd ../..
+      - echo "Zipping and uploading Signup Lambda..."
+      - cd lambdas/signup
+      - zip -r signup.zip .
+      - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
+      - cd ../..
+
+      - echo "Zipping and uploading Login Lambda..."
+      - cd lambdas/login
+      - zip -r login.zip .
+      - aws s3 cp login.zip s3://vpc-provisioning-bucket/lambdas/login.zip
+      - cd ../..
+
 artifacts:
   files:
-    - signup.zip
-    - login.zip
-  discard-paths: yes
-
-post_build:
-  commands:
-    - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
-    - aws s3 cp login.zip s3://vpc-provisioning-bucket/lambdas/login.zip
+    - lambdas/signup/signup.zip
+    - lambdas/login/login.zip

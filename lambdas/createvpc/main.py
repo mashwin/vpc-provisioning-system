@@ -25,9 +25,9 @@ def lambda_handler(event, context):
 
         table = dynamodb.Table(TABLE_NAME)
         table.put_item(Item={
-            'id': str(uuid.uuid4()),
-            'vpcId': vpc_id,
-            'subnetId': subnet_id,
+            'vpc_id': vpc_id,
+            'subnet_id': subnet_id,
+            'region': ec2.meta.region_name
         })
 
         return {

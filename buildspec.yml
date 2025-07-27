@@ -5,36 +5,50 @@ phases:
     runtime-versions:
       python: 3.12
     commands:
-      - echo "Installing dependencies for signup... "
+      - echo "Installing dependencies for signup lambda..."
       - cd lambdas/signup
       - pip install -r requirements.txt -t .
-      - cd ../login
-      - echo "Installing dependencies for login..."
+      - cd ../..
+
+      - echo "Installing dependencies for login lambda..."
+      - cd lambdas/login
+      - pip install -r requirements.txt -t .
+      - cd ../..
+
+      - echo "Installing dependencies for confirm lambda..."
+      - cd lambdas/confirm
       - pip install -r requirements.txt -t .
       - cd ../..
 
   build:
     commands:
-      - echo "Zipping signup Lambda..."
+      - echo "Zipping signup lambda..."
       - cd lambdas/signup
       - zip -r ../../signup.zip .
       - cd ../..
 
-      - echo "Uploading signup.zip to S3..."
-      - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
-      - aws lambda update-function-code --function-name vpc-provisioning-signup-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/signup.zip
-
-      - echo "Zipping login Lambda..."
+      - echo "Zipping login lambda..."
       - cd lambdas/login
       - zip -r ../../login.zip .
       - cd ../..
 
+      - echo "Zipping confirm lambda..."
+      - cd lambdas/confirm
+      - zip -r ../../confirm.zip .
+      - cd ../..
+
+      - echo "Uploading signup.zip to S3..."
+      - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
+
       - echo "Uploading login.zip to S3..."
       - aws s3 cp login.zip s3://vpc-provisioning-bucket/lambdas/login.zip
-      - aws lambda update-function-code --function-name vpc-provisioning-login-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/login.zip
+
+      - echo "Uploading confirm.zip to S3..."
+      - aws s3 cp confirm.zip s3://vpc-provisioning-bucket/lambdas/confirm.zip
 
 artifacts:
   files:
     - signup.zip
     - login.zip
+    - confirm.zip
   discard-paths: yes

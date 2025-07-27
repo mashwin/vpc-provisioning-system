@@ -55,7 +55,7 @@ build:
     - cd lambdas/createvpc
     - zip -r createvpc.zip .
     - aws s3 rm s3://vpc-provisioning-bucket/lambdas/createvpc.zip || true
-    - aws s3 cp confirm.zip s3://vpc-provisioning-bucket/lambdas/createvpc.zip
+    - aws s3 cp createvpc.zip s3://vpc-provisioning-bucket/lambdas/createvpc.zip
     - aws lambda update-function-code --function-name vpc-provisioning-createvpc-dev --s3-bucket vpc-provisioning-bucket --s3-key lambdas/createvpc.zip
     - cd ../..
 

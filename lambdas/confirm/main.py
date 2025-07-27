@@ -3,6 +3,7 @@ import json
 import os
 
 client = boto3.client("cognito-idp")
+print("os environ ", os.environ)
 CLIENT_ID = os.environ["COGNITO_CLIENT_ID"]
 
 def lambda_handler(event, context):
@@ -11,11 +12,16 @@ def lambda_handler(event, context):
         email = body["email"]
         code = body["code"]
 
+        print("email", email, code)
+        print("client id ", CLIENT_ID)
+
         response = client.confirm_sign_up(
             ClientId=CLIENT_ID,
             Username=email,
             ConfirmationCode=code
         )
+
+        print("response ", response)
 
         return {
             "statusCode": 200,

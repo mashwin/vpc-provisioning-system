@@ -101,3 +101,76 @@ resource "aws_lambda_permission" "api_gateway_confirm" {
   source_arn    = "${var.api_gateway_execution_arn}/*/POST/confirm"
 }
 
+resource "aws_lambda_function" "createvpc" {
+  function_name = "vpc-provisioning-createvpc-${var.env}"
+  handler       = "main.lambda_handler"
+  runtime       = "python3.12"
+  s3_bucket     = "vpc-provisioning-bucket"
+  s3_key        = "lambdas/createvpc.zip"
+  role          = aws_iam_role.lambda_exec.arn
+  memory_size   = 256
+  timeout       = 300
+
+  environment {
+    variables = {
+      DYNAMODB_TABLE_NAME = var.dynamodb_table_name
+    }
+  }
+}
+
+resource "aws_lambda_permission" "api_gateway_createvpc" {
+  statement_id  = "AllowAPIGatewayInvokeCreateVpc"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.createvpc.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${var.api_gateway_execution_arn}/*/POST/createvpc"
+}
+
+
+# Policy for DynamoDB access
+resource "aws_iam_role_policy" "lambda_dynamodb_access" {
+  name = "lambda-dynamodb-access"
+  role = aws_iam_role.lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "dynamodb:PutItem",
+          "dynamodb:GetItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:Scan",
+          "dynamodb:Query"
+        ],
+        Resource = var.dynamodb_table_arn
+      }
+    ]
+  })
+}
+
+# Policy for creating VPCs and networking resources
+resource "aws_iam_role_policy" "lambda_vpc_creation" {
+  name = "lambda-vpc-creation"
+  role = aws_iam_role.lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "ec2:CreateVpc",
+          "ec2:CreateSubnet",
+          "ec2:CreateRouteTable",
+          "ec2:CreateRoute",
+          "ec2:AssociateRouteTable",
+          "ec2:Describe*",
+          "ec2:CreateTags"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}

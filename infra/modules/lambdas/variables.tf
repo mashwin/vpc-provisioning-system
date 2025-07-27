@@ -17,3 +17,13 @@ variable "api_gateway_execution_arn" {
   description = "Execution ARN of the API Gateway"
   type        = string
 }
+
+variable "dynamodb_table_arn" {
+  description = "ARN of Dynamodb Table"
+  type        = string
+}
+
+variable "dynamodb_table_name" {
+  description = "Name of Dynamodb Table"
+  type        = string
+}

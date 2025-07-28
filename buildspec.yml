@@ -57,6 +57,11 @@ phases:
       - zip -r ../../getvpc.zip .
       - cd ../..
 
+      - echo "Zipping custom-authorizer lambda..."
+      - cd lambdas/custom-authorizer
+      - zip -r ../../custom-authorizer.zip .
+      - cd ../..
+
       - echo "Uploading signup.zip to S3..."
       - aws s3 cp signup.zip s3://vpc-provisioning-bucket/lambdas/signup.zip
 
@@ -72,6 +77,9 @@ phases:
       - echo "Uploading getvpc.zip to S3..."
       - aws s3 cp getvpc.zip s3://vpc-provisioning-bucket/lambdas/getvpc.zip
 
+      - echo "Uploading custom-authorizer.zip to S3..."
+      - aws s3 cp custom-authorizer.zip s3://vpc-provisioning-bucket/lambdas/custom-authorizer.zip
+
 artifacts:
   files:
     - signup.zip
@@ -79,4 +87,5 @@ artifacts:
     - confirm.zip
     - createvpc.zip
     - getvpc.zip
+    - custom-authorizer.zip
   discard-paths: yes

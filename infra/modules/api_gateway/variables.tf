@@ -25,11 +25,31 @@ variable "confirm_lambda_arn" {
 }
 
 variable "createvpc_lambda_arn" {
-  description = "ARN of the confirm lambda function"
+  description = "ARN of the createvpc lambda function"
+  type        = string
+}
+
+variable "getvpc_lambda_arn" {
+  description = "ARN of the getvpc lambda function"
+  type        = string
+}
+
+variable "custom_authorizer_arn" {
+  description = "ARN of the getvpc lambda function"
+  type        = string
+}
+
+variable "custom_authorizer_name" {
+  description = "ARN of the getvpc lambda function"
   type        = string
 }
 
 variable "region" {
   description = "default region"
   default     = "us-east-1"
+}
+
+variable "env" {
+  description = "default env"
+  default     = "dev"
 }

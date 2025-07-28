@@ -127,6 +127,50 @@ resource "aws_lambda_permission" "api_gateway_createvpc" {
 }
 
 
+resource "aws_lambda_function" "getvpc" {
+  function_name = "vpc-provisioning-getvpc-${var.env}"
+  handler       = "main.lambda_handler"
+  runtime       = "python3.12"
+  s3_bucket     = "vpc-provisioning-bucket"
+  s3_key        = "lambdas/getvpc.zip"
+  role          = aws_iam_role.lambda_exec.arn
+  memory_size   = 256
+  timeout       = 300
+
+  environment {
+    variables = {
+      DYNAMODB_TABLE_NAME = var.dynamodb_table_name
+    }
+  }
+}
+
+resource "aws_lambda_permission" "api_gateway_getvpc" {
+  statement_id  = "AllowAPIGatewayInvokeGetVpc"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.getvpc.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${var.api_gateway_execution_arn}/*/GET/getvpc/*"
+}
+
+
+resource "aws_lambda_function" "custom_authorizer" {
+  function_name = "vpc-provisioning-authorizer-${var.env}"
+  handler       = "main.lambda_handler"
+  runtime       = "python3.12"
+  s3_bucket     = "vpc-provisioning-bucket"
+  s3_key        = "lambdas/custom-authorizer.zip"
+  role          = aws_iam_role.lambda_exec.arn
+  memory_size   = 128
+  timeout       = 300
+  environment {
+    variables = {
+      COGNITO_USER_POOL_ID = var.cognito_user_pool_id
+      COGNITO_CLIENT_ID    = var.cognito_app_client_id
+    }
+  }
+}
+
+
 # Policy for DynamoDB access
 resource "aws_iam_role_policy" "lambda_dynamodb_access" {
   name = "lambda-dynamodb-access"

@@ -17,7 +17,7 @@ def lambda_handler(event, context):
         if 'Item' not in response:
             return {
                 'statusCode': 404,
-                'body': json.dumps({'message': f'VPC ID {vpc_id} not found'})
+                'body': json.dumps({'message': f'VPC ID {vpc_id} not foun'})
             }
         
         return {

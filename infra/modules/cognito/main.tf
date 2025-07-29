@@ -1,12 +1,12 @@
-# Cognito User Pool
+# cognito user pool
 resource "aws_cognito_user_pool" "users" {
   name = "vpc-provisioning-users-${var.env}"
 
-  # Require email for signup/login
+  # require email for signup/login
   username_attributes      = ["email"]
   auto_verified_attributes = ["email"]
 
-  # Password policy
+  # password policy
   password_policy {
     minimum_length    = 8
     require_numbers   = true
@@ -15,14 +15,14 @@ resource "aws_cognito_user_pool" "users" {
   }
 }
 
-# Cognito App Client
+# cognito app client
 resource "aws_cognito_user_pool_client" "web_client" {
   name = "vpc-provisioning-client-${var.env}"
 
   user_pool_id    = aws_cognito_user_pool.users.id
   generate_secret = false
 
-  # Auth flows
+  # auth flows
   explicit_auth_flows = [
     "ALLOW_USER_PASSWORD_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",

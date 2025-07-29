@@ -1,9 +1,10 @@
+# api gateway resource
 resource "aws_api_gateway_rest_api" "vpc_provisioning_api" {
   name        = "vpc-provisioning-api"
   description = "API for VPC provisioning"
 }
 
-# Signup resource
+# signup resource
 resource "aws_api_gateway_resource" "signup" {
   rest_api_id = aws_api_gateway_rest_api.vpc_provisioning_api.id
   parent_id   = aws_api_gateway_rest_api.vpc_provisioning_api.root_resource_id
@@ -18,7 +19,7 @@ resource "aws_api_gateway_method" "signup_post" {
   authorization = "NONE"
 }
 
-# Link to Lambda
+# signup lambda integration
 resource "aws_api_gateway_integration" "signup_lambda" {
   rest_api_id = aws_api_gateway_rest_api.vpc_provisioning_api.id
   resource_id = aws_api_gateway_resource.signup.id
@@ -88,10 +89,15 @@ resource "aws_api_gateway_resource" "createvpc" {
 
 # post method for createvpc
 resource "aws_api_gateway_method" "createvpc_post" {
-  rest_api_id   = aws_api_gateway_rest_api.vpc_provisioning_api.id
-  resource_id   = aws_api_gateway_resource.createvpc.id
-  http_method   = "POST"
-  authorization = "NONE"
+  rest_api_id      = aws_api_gateway_rest_api.vpc_provisioning_api.id
+  resource_id      = aws_api_gateway_resource.createvpc.id
+  http_method      = "POST"
+  authorization    = "CUSTOM"
+  authorizer_id    = aws_api_gateway_authorizer.vpc_authorizer.id
+  api_key_required = false
+  request_parameters = {
+    "method.request.header.Authorization" = true
+  }
 }
 
 # createvpc lambda integration
@@ -104,14 +110,14 @@ resource "aws_api_gateway_integration" "createvpc_lambda" {
   uri                     = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${var.createvpc_lambda_arn}/invocations"
 }
 
-# resource for /getvpc
+# resource for getvpc
 resource "aws_api_gateway_resource" "getvpc" {
   rest_api_id = aws_api_gateway_rest_api.vpc_provisioning_api.id
   parent_id   = aws_api_gateway_rest_api.vpc_provisioning_api.root_resource_id
   path_part   = "getvpc"
 }
 
-# resource for /getvpc/{vpc_id}
+# resource for getvpc/{vpc_id}
 resource "aws_api_gateway_resource" "getvpc_by_id" {
   rest_api_id = aws_api_gateway_rest_api.vpc_provisioning_api.id
   parent_id   = aws_api_gateway_resource.getvpc.id

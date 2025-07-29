@@ -1,10 +1,10 @@
-# 🛠️ VPC Provisioning System API
+# VPC Provisioning System API
 
 This REST API allows users to sign up, authenticate using AWS Cognito, and securely provision AWS VPCs. All VPC-related operations are protected by a custom Lambda authorizer that verifies JWT access tokens issued by Cognito.
 
 ---
 
-## 🧑‍💻 Authentication Endpoints (AWS Cognito)
+## Authentication Endpoints (AWS Cognito)
 
 ### `POST /signup`
 
